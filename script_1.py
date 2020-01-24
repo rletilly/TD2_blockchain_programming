@@ -7,13 +7,15 @@ def seed():
     return ''.join(random.choice(chars) for i in range(length))
 
 def decoupage_11(seed):
-    tab =[]
-    pack =""
+    pack = ""
+    tab = []
     for i in range(len(seed)):
         pack = pack + seed[i]
-        if i+1 % 11 == 0 :
+        if((i+1)%11==0):
             tab.append(pack)
-            pack = ""
+            pack =""
     return tab
 
 print(decoupage_11(seed()))
+for pack in decoupage_11(seed()) :
+    print(len(pack))
