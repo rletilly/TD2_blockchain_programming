@@ -79,4 +79,18 @@ def mnemonique_words(seed): #seed must be binary
     Big_seed = seed + four_first_bits
     return from_seed_to_words(Big_seed)
 
-print(mnemonique_words(seed()))
+def valid_mnemonique(mnemonique):
+    Big_seed = mnemonique_to_bit(mnemonique)
+    seed=''
+    for i in range(len(Big_seed)-4):
+        seed = seed + Big_seed[i]
+    chain_code =Big_seed[128]+ Big_seed[129]+ Big_seed[130]+ Big_seed[131]
+    #Now we got seed + chain code
+    seed_bytes = bit_to_bytes(seed)
+    hash_seed_bytes = hashlib.sha256(seed_bytes).digest()
+    hash_seed_bits = bytes_to_bit(hash_seed_bytes)
+    four_first_bits = hash_seed_bits[0] + hash_seed_bits[1] + hash_seed_bits[2] + hash_seed_bits[3]
+    if four_first_bits == chain_code:
+        return True
+    else:
+        return False
