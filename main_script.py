@@ -1,12 +1,10 @@
-import os, random, string ,csv
+import os, random, string ,csv, hashlib
 
 def nb_aleatoire():
     return from_bits_to_int(seed())
 
 def seed():
-    length = 132
-    chars = '01'
-    return ''.join(random.choice(chars) for i in range(length))
+    return bytes_to_bit(os.urandom(16))
 def decoupage_11(seed):
     pack = ""
     tab = []
@@ -39,14 +37,46 @@ def from_seed_to_words(seed):
         result = result +words[from_bits_to_int(pack)] + " "
     return result
 
-def int_to_bit(integer):  #just for 11 bits blocks
+def int_to_bit(integer,size):
     bit = str(bin(integer)).split('b')[1]
-    return '0'*(11-len(bit))+bit
+    return '0'*(size-len(bit))+bit
     
 def mnemonique_to_bit(mnemonique):
     tab = mnemonique.split(' ')
     words = import_words()
     result =""
     for word in tab :
-        result = result + int_to_bit(words.index(word))
+        result = result + int_to_bit(words.index(word),11)
     return result
+
+
+def bytes_to_bit(seed): 
+    response =''
+    for i in range(len(seed)):
+        response = response + int_to_bit(seed[i],8)
+    return response
+
+def bit_to_bytes(seed):
+    first_loop = True
+    pack = ""
+    for i in range(len(seed)):
+        pack = pack + seed[i]
+        if((i+1)%8==0):
+            if(first_loop ==  False):
+                tab = tab+bytes([from_bits_to_int(pack)])
+            else :
+                tab = bytes([from_bits_to_int(pack)])
+                first_loop = False
+            pack =""
+    return tab
+
+
+def mnemonique_words(seed): #seed must be binary
+    seed_bytes = bit_to_bytes(seed)
+    hash_seed_bytes = hashlib.sha256(seed_bytes).digest()
+    hash_seed_bits = bytes_to_bit(hash_seed_bytes)
+    four_first_bits = hash_seed_bits[0] + hash_seed_bits[1] + hash_seed_bits[2] + hash_seed_bits[3]
+    Big_seed = seed + four_first_bits
+    return from_seed_to_words(Big_seed)
+
+print(mnemonique_words(seed()))
