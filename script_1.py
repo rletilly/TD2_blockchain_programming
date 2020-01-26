@@ -1,5 +1,5 @@
-import os, random, string ,csv, hashlib 
-
+import os, random, string ,csv, hashlib
+from Some_math_functions import *
 
 def nb_aleatoire():
     return from_bits_to_int(seed())
@@ -106,19 +106,40 @@ def seed_to_master(mnemonique):
     return [Master_private_key,Master_chain_code]
 
 mnemonique = "alpha crop away royal bid artist couch flock price daring coin young"
-seed_to_master(mnemonique)
+pwd = "gdhje67ggfhh"
+private = seed_to_master(mnemonique)
 
 
-from fastecdsa import curve, ecdsa, keys
-from hashlib import sha384
+def publicKey(Privatekey):
+        curve = secp256k1
+        result =  Math.multiply(p=curve.G,n=Privatekey,N=curve.N,A=curve.A,P =curve.P,)
+        result.x = '0x'+'0'*(66-len(hex(result.x) ))+hex(result.x)[2:]
+        result.y = '0x'+'0'*(66-len(hex(result.y)))+hex(result.y)[2:]
+        return [result.x,result.y]
+
+
+def affichage_public():
+    Privatekey = "0x1E99423A4ED27608A15A2616A2B0E9E52CED330AC530EDCC32C8FFC6A526AEDD"
+    Privatekey_int = int(Privatekey,16)
+    Publickey = publicKey(Privatekey_int)
+    print("Privatekey : " + Privatekey)
+    print("")
+    print("x =" + str(Publickey[0]))
+    print("y =" + str(Publickey[1]))
+
+
+seed ="0c1e24e5917779d297e14d45f14e1a1a"
+seed =int(seed,16)
+seed = int_to_bit(seed,128)
+mn = mnemonique_words(seed)
+print(mn)
 
 
 
-m = "a message to sign via ECDSA"  # some message
 
-''' use default curve and hash function (P256 and SHA2) '''
-private_key = keys.gen_private_key(curve.P256)
-public_key = keys.get_public_key(private_key, curve.P256)
+
+
+
 
 
 

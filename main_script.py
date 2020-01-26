@@ -1,4 +1,5 @@
 import os, random, string ,csv, hashlib
+from Some_math_functions import *
 
 def nb_aleatoire():
     return from_bits_to_int(seed())
@@ -97,13 +98,38 @@ def valid_mnemonique(mnemonique):
         
 def seed_to_master(mnemonique):
     seed = mnemonique_to_bit(mnemonique)
-    seed = seed[0:128]
     seed = bit_to_bytes(seed)
-    seed_512 = hashlib.sha512(seed).digest()
+    seed_512  = hashlib.sha512(seed).digest()
     seed_512 = bytes_to_bit(seed_512)
     Master_private_key = seed_512[0:256]
     Master_chain_code = seed_512[256:512]
     return [Master_private_key,Master_chain_code]
 
 mnemonique = "alpha crop away royal bid artist couch flock price daring coin young"
-seed_to_master(mnemonique)
+pwd = "gdhje67ggfhh"
+private = seed_to_master(mnemonique)
+
+
+def publicKey(Privatekey):
+        curve = secp256k1
+        result =  Math.multiply(p=curve.G,n=Privatekey,N=curve.N,A=curve.A,P =curve.P,)
+        result.x = '0x'+'0'*(66-len(hex(result.x) ))+hex(result.x)[2:]
+        result.y = '0x'+'0'*(66-len(hex(result.y)))+hex(result.y)[2:]
+        return [result.x,result.y]
+
+
+def affichage_public():
+    Privatekey = "0x1E99423A4ED27608A15A2616A2B0E9E52CED330AC530EDCC32C8FFC6A526AEDD"
+    Privatekey_int = int(Privatekey,16)
+    Publickey = publicKey(Privatekey_int)
+    print("Privatekey : " + Privatekey)
+    print("")
+    print("x =" + str(Publickey[0]))
+    print("y =" + str(Publickey[1]))
+
+
+Seed ="0c1e24e5917779d297e14d45f14e1a1a"
+Seed =int(Seed,16)
+Seed = int_to_bit(Seed,128)
+mn = mnemonique_words(Seed)
+#print(mn)
