@@ -1,4 +1,5 @@
-import os, random, string ,csv, hashlib
+import os, random, string ,csv, hashlib 
+
 
 def nb_aleatoire():
     return from_bits_to_int(seed())
@@ -106,3 +107,22 @@ def seed_to_master(mnemonique):
 
 mnemonique = "alpha crop away royal bid artist couch flock price daring coin young"
 seed_to_master(mnemonique)
+
+
+from fastecdsa import curve, ecdsa, keys
+from hashlib import sha384
+
+
+
+m = "a message to sign via ECDSA"  # some message
+
+''' use default curve and hash function (P256 and SHA2) '''
+private_key = keys.gen_private_key(curve.P256)
+public_key = keys.get_public_key(private_key, curve.P256)
+
+
+
+
+
+
+

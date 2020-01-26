@@ -102,10 +102,7 @@ def seed_to_master(mnemonique):
     seed_512 = bytes_to_bit(seed_512)
     Master_private_key = seed_512[0:256]
     Master_chain_code = seed_512[256:512]
-<<<<<<< HEAD
     return [Master_private_key,Master_chain_code]
-=======
->>>>>>> origin/master
 
 mnemonique = "alpha crop away royal bid artist couch flock price daring coin young"
 seed_to_master(mnemonique)
