@@ -149,25 +149,63 @@ def base58encode(hexstring):
 
     return (BASE58_ALPHABET[0:1] * leading_zeroes_count + res).decode('ascii')
 
-print(base58encode("0488B21E013442193E8000000047FDACBD0F1097043B78C63C20C34EF4ED9A111D980047AD16282C7AE6236141035A784662A4A20A65BF6AAB9AE98A6C068A81C52E4B032C0FB5400C706CFCCC56B8B9C580"))
+def base58decode(base58_str):
+    base58_text = bytes(base58_str, "ascii")
+    n = 0
+    leading_zeroes_count = 0
+    for b in base58_text:
+        n = n * 58 + BASE58_ALPHABET.find(b)
+        if n == 0:
+            leading_zeroes_count += 1
+    res = bytearray()
+    while n >= 256:
+        div, mod = divmod(n, 256)
+        res.insert(0, mod)
+        n = div
+    else:
+        res.insert(0, n)
+    return hexlify(bytearray(1) * leading_zeroes_count + res).decode('ascii')
+#print(base58encode("0488B21E013442193E8000000047FDACBD0F1097043B78C63C20C34EF4ED9A111D980047AD16282C7AE6236141035A784662A4A20A65BF6AAB9AE98A6C068A81C52E4B032C0FB5400C706CFCCC56B8B9C580"))
 
-Seed ="0c1e24e5917779d297e14d45f14e1a1a"
-Seed =int(Seed,16)
-Seed = int_to_bit(Seed,128)
+Seed = seed()
 mn = mnemonique_words(Seed)
+#mn = "kind siege drum conduct pass actor raccoon mad flavor dwarf scrub brother"
+
 Private_key = seed_to_master(mn)[0]
 Chain_code = seed_to_master(mn)[1]
 PublicKey = publicKey(from_bits_to_int(Private_key))[0]
 
 
 
+def Master_pub_Key(mn):
+
+    Private_key = from_bits_to_int(seed_to_master(mn)[0])
+    Chain_code = hex(from_bits_to_int(seed_to_master(mn)[1]))[2:]
+    Chain_code = '0'*(64-len(Chain_code)) + Chain_code #On adapte la taille 
+    PublicKey = publicKey(Private_key)[0][2:]
+    version = "0488b21e"
+    key_num = "00"
+    finger_print = "00000000"
+    child_number = "00000000"
+    PublicKey = "02" + PublicKey
+    
+    Master_public = version + key_num + finger_print + child_number + Chain_code + PublicKey
+    
+
+    Master_public_bytes = int_to_bit(int(Master_public,16),624)
+    Master_public_bytes =  bit_to_bytes(Master_public_bytes)
+    
+    hash_Master_public_bytes = hashlib.sha256(Master_public_bytes).digest()
+    hash_Master_public_bytes = hashlib.sha256(hash_Master_public_bytes).digest()
+    hex_check_sum = bytes_to_bit(hash_Master_public_bytes)[0:32]
+    hex_check_sum = from_bits_to_int(hex_check_sum)
+    hex_check_sum = hex(hex_check_sum)[2:]
 
 
+    Master_public = Master_public + hex_check_sum
+    Master_public = base58encode(Master_public)
+    print(Master_public)
 
-
-
-
-
-
+Master_pub_Key(mn)
 
 
