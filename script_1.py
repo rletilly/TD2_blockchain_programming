@@ -1,5 +1,7 @@
-import os, random, string ,csv, hashlib
+import os, random, string ,csv, hashlib 
 from Some_math_functions import *
+from binascii import hexlify, unhexlify
+BASE58_ALPHABET = b"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 def nb_aleatoire():
     return from_bits_to_int(seed())
@@ -112,7 +114,7 @@ pwd = "gdhje67ggfhh"
 private = seed_to_master(mnemonique)
 
 
-def publicKey(Privatekey):
+def publicKey(Privatekey): #Private en int
         curve = secp256k1
         result =  Math.multiply(p=curve.G,n=Privatekey,N=curve.N,A=curve.A,P =curve.P,)
         result.x = '0x'+'0'*(66-len(hex(result.x) ))+hex(result.x)[2:]
@@ -129,15 +131,33 @@ def affichage_public():
     print("x =" + str(Publickey[0]))
     print("y =" + str(Publickey[1]))
 
+def base58encode(hexstring):
+    byteseq = bytes(unhexlify(bytes(hexstring, 'ascii')))
+    n = 0
+    leading_zeroes_count = 0
+    for c in byteseq:
+        n = n * 256 + c
+        if n == 0:
+            leading_zeroes_count += 1
+    res = bytearray()
+    while n >= 58:
+        div, mod = divmod(n, 58)
+        res.insert(0, BASE58_ALPHABET[mod])
+        n = div
+    else:
+        res.insert(0, BASE58_ALPHABET[n])
+
+    return (BASE58_ALPHABET[0:1] * leading_zeroes_count + res).decode('ascii')
+
+print(base58encode("0488B21E013442193E8000000047FDACBD0F1097043B78C63C20C34EF4ED9A111D980047AD16282C7AE6236141035A784662A4A20A65BF6AAB9AE98A6C068A81C52E4B032C0FB5400C706CFCCC56B8B9C580"))
 
 Seed ="0c1e24e5917779d297e14d45f14e1a1a"
 Seed =int(Seed,16)
 Seed = int_to_bit(Seed,128)
 mn = mnemonique_words(Seed)
-Master_private_key =seed_to_master(mn)[0]
-Master_chain_code = seed_to_master(mn)[1]
-print(mn)
-
+Private_key = seed_to_master(mn)[0]
+Chain_code = seed_to_master(mn)[1]
+PublicKey = publicKey(from_bits_to_int(Private_key))[0]
 
 
 
