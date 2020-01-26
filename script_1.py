@@ -57,7 +57,7 @@ def bytes_to_bit(seed):
         response = response + int_to_bit(seed[i],8)
     return response
 
-def bit_to_bytes(seed):
+def bit_to_bytes(seed): # send len() that is a multiple of 8
     first_loop = True
     pack = ""
     for i in range(len(seed)):
@@ -78,7 +78,8 @@ def mnemonique_words(seed): #seed must be binary
     hash_seed_bits = bytes_to_bit(hash_seed_bytes)
     four_first_bits = hash_seed_bits[0] + hash_seed_bits[1] + hash_seed_bits[2] + hash_seed_bits[3]
     Big_seed = seed + four_first_bits
-    return from_seed_to_words(Big_seed)
+    mn = from_seed_to_words(Big_seed)[0:len(from_seed_to_words(Big_seed))-1]
+    return mn
 
 def valid_mnemonique(mnemonique):
     Big_seed = mnemonique_to_bit(mnemonique)
@@ -98,6 +99,7 @@ def valid_mnemonique(mnemonique):
         
 def seed_to_master(mnemonique):
     seed = mnemonique_to_bit(mnemonique)
+    seed = seed[0:128]
     seed = bit_to_bytes(seed)
     seed_512  = hashlib.sha512(seed).digest()
     seed_512 = bytes_to_bit(seed_512)
@@ -128,10 +130,12 @@ def affichage_public():
     print("y =" + str(Publickey[1]))
 
 
-seed ="0c1e24e5917779d297e14d45f14e1a1a"
-seed =int(seed,16)
-seed = int_to_bit(seed,128)
-mn = mnemonique_words(seed)
+Seed ="0c1e24e5917779d297e14d45f14e1a1a"
+Seed =int(Seed,16)
+Seed = int_to_bit(Seed,128)
+mn = mnemonique_words(Seed)
+Master_private_key =seed_to_master(mn)[0]
+Master_chain_code = seed_to_master(mn)[1]
 print(mn)
 
 
