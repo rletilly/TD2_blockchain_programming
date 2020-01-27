@@ -109,10 +109,6 @@ def seed_to_master(mnemonique):
     Master_chain_code = seed_512[256:512]
     return [Master_private_key,Master_chain_code]
 
-mnemonique = "alpha crop away royal bid artist couch flock price daring coin young"
-pwd = "gdhje67ggfhh"
-private = seed_to_master(mnemonique)
-
 
 def publicKey(Privatekey): #Private en int
         curve = secp256k1
@@ -123,6 +119,7 @@ def publicKey(Privatekey): #Private en int
 
 
 def affichage_public():
+    #Module de test de la fct private key
     Privatekey = "0x1E99423A4ED27608A15A2616A2B0E9E52CED330AC530EDCC32C8FFC6A526AEDD"
     Privatekey_int = int(Privatekey,16)
     Publickey = publicKey(Privatekey_int)
@@ -168,8 +165,12 @@ def base58decode(base58_str):
 #print(base58encode("0488B21E013442193E8000000047FDACBD0F1097043B78C63C20C34EF4ED9A111D980047AD16282C7AE6236141035A784662A4A20A65BF6AAB9AE98A6C068A81C52E4B032C0FB5400C706CFCCC56B8B9C580"))
 
 Seed = seed()
+##### Test
+Seed = '000102030405060708090a0b0c0d0e0f'
+Seed = int(Seed,16)
+Seed = int_to_bit(Seed,128)
+##### End Test
 mn = mnemonique_words(Seed)
-#mn = "kind siege drum conduct pass actor raccoon mad flavor dwarf scrub brother"
 
 Private_key = seed_to_master(mn)[0]
 Chain_code = seed_to_master(mn)[1]
@@ -204,8 +205,14 @@ def Master_pub_Key(mn):
 
     Master_public = Master_public + hex_check_sum
     Master_public = base58encode(Master_public)
-    print(Master_public)
-
-Master_pub_Key(mn)
+    #print(Master_public)
+    #TEST#
+    #print(" ")
+    #Response_true = 'xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8'
+    #print(base58decode(Master_public))
+    #print(base58decode(Response_true))
+    #End test
+    return Master_public
+#Master_pub_Key(mn)
 
 
