@@ -8,6 +8,7 @@ def nb_aleatoire():
 
 def seed():
     return bytes_to_bit(os.urandom(16))
+
 def decoupage_11(seed):
     pack = ""
     tab = []

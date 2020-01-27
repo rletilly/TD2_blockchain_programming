@@ -23,7 +23,7 @@ while(choix != 'q'):
         decoupe = decoupage_11(Seed)
         for i in range(11):
             print("    " + str(i+1)+" - "+decoupe[i])
-        print("    " + str(12)+" - "+Seed[121:]+ "\t\t(Il nous faut encore rajouter le chain code à l'étape suivante)")
+        print("    " + str(12)+" - "+Seed[121:]+ "\t\t(Il nous faut encore rajouter le checksum à l'étape suivante)")
         print(" ")
         print("Et en rajoutant le chain code on obtient la phrase : \n")
         print(mnemonique_words(Seed))
